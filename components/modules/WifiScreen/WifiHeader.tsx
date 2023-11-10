@@ -27,12 +27,23 @@ const WifiHeader = (props: Props) => {
         </Link>
       </View>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.textHead}>{"Devices : " + props.devices}</Text>
-        </View>
-        <Link href={`/add-endpoint/${props.id}`} asChild>
+        <Link href={`/add-device/${props.id}`} asChild>
           <Pressable>
             <View style={styles.button}>
+              <Ionicons name="add-circle" size={24} color="black" />
+              <Text style={styles.textAdd}>Add Device</Text>
+            </View>
+          </Pressable>
+        </Link>
+        <Link href={`/add-endpoint/${props.id}`} asChild>
+          <Pressable disabled={props.devices === 0}>
+            <View
+              style={
+                props.devices === 0
+                  ? [styles.button, styles.onDisable]
+                  : styles.button
+              }
+            >
               <Ionicons name="add-circle" size={24} color="black" />
               <Text style={styles.textAdd}>Add Endpoint</Text>
             </View>
@@ -73,6 +84,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  onDisable: {
+    backgroundColor: "gray",
+    opacity: 0.6,
   },
   textAdd: {
     fontWeight: "500",

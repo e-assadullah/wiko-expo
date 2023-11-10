@@ -11,7 +11,7 @@ const WifiScreen = (props: Props) => {
   const name = "Home";
   return (
     <View style={styles.container}>
-      <WifiHeader id={props.id} name={name} devices={3} />
+      <WifiHeader id={props.id} name={name} devices={1} />
       <EndpointContainer />
     </View>
   );
@@ -24,5 +24,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     padding: 26,
+    marginTop: 5,
   },
 });
