@@ -16,7 +16,7 @@ type TData = {
 
 const AddWifiScreen = () => {
   const db = SQLite.openDatabase("sqlite.db");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const emptyData: TData = {
     id: 0,
@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     padding: 26,
+    marginTop: 5,
   },
   header: {
     display: "flex",

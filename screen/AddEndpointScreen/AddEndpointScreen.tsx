@@ -24,5 +24,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     padding: 26,
+    marginTop: 5,
   },
 });
