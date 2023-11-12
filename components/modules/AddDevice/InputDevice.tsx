@@ -16,7 +16,7 @@ type TData = {
 };
 
 const InputDevice = (props: Props) => {
-  const db = SQLite.openDatabase("sqlite.db");
+  const db = SQLite.openDatabase("database.db");
 
   const emptyData: TData = {
     id: 0,

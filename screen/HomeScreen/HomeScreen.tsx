@@ -12,7 +12,7 @@ import * as SQLite from "expo-sqlite";
 import EmptyCard from "../../components/modules/HomeScreen/EmptyCard";
 
 const HomeScreen = () => {
-  const db = SQLite.openDatabase("sqlite.db");
+  const db = SQLite.openDatabase("database.db");
   const [wifi, setWifi] = useState<IWifi[]>([]);
 
   useEffect(() => {

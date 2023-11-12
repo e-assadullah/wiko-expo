@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 const AddDeviceHeader = () => {
   return (
     <View style={styles.header}>
-      <Pressable onPress={() => router.back()}>
+      <Pressable onPress={() => router.replace("/")}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </Pressable>
       <Text style={styles.textHead}>Add new device</Text>
