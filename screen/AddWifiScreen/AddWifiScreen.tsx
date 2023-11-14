@@ -15,7 +15,7 @@ type TData = {
 };
 
 const AddWifiScreen = () => {
-  const db = SQLite.openDatabase("database.db");
+  const db = SQLite.openDatabase("database2.db");
   const [loading, setLoading] = useState<boolean>(true);
 
   const emptyData: TData = {
@@ -101,7 +101,7 @@ const AddWifiScreen = () => {
       return dbData?.map((data: any, i) => {
         return (
           <View key={data.id} style={styles.showData}>
-            <Text>{data.name}</Text>
+            <Text>{data.devices_count}</Text>
             <Button
               title="Delete"
               color={"#c1121f"}

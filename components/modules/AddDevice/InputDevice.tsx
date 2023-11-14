@@ -16,7 +16,7 @@ type TData = {
 };
 
 const InputDevice = (props: Props) => {
-  const db = SQLite.openDatabase("database.db");
+  const db = SQLite.openDatabase("database2.db");
 
   const emptyData: TData = {
     id: 0,
@@ -29,7 +29,29 @@ const InputDevice = (props: Props) => {
 
   const [dbData, setDbData] = useState<any[]>([]);
 
+  const [wifi, setWifi] = useState<any[]>([]);
+
   useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM wifi WHERE id = ${props.id as string}`,
+        undefined,
+        (txObj, resultSet) => {
+          if (resultSet.rows.length) {
+            let temp = [];
+            for (let i = 0; i < resultSet.rows.length; ++i) {
+              temp.push(resultSet.rows.item(i));
+            }
+            return setWifi(temp);
+          }
+        },
+        (txObj, error) => {
+          console.log(error);
+          return false;
+        }
+      );
+    });
+
     db.transaction((tx) => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS device (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, base_ip TEXT, wifi_id INTEGER)`
@@ -64,13 +86,23 @@ const InputDevice = (props: Props) => {
         [data.nameDevice, data.ipAddressDevice, data.idWifi],
         (txObj, resultSet: SQLite.SQLResultSet) => {
           if (resultSet.rowsAffected) {
-            setData(emptyData);
-            router.replace(`/add-device/${data.idWifi}`);
           }
         },
         (txObj, error) => {
           console.log(error);
           return false;
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE wifi SET devices_count = ? WHERE id = ${data.idWifi}`,
+        [wifi[0].devices_count + 1],
+        (txObj, resultSet: SQLite.SQLResultSet) => {
+          if (resultSet.rowsAffected) {
+            setData(emptyData);
+            router.replace(`/add-device/${data.idWifi}`);
+          }
         }
       );
     });
@@ -83,12 +115,22 @@ const InputDevice = (props: Props) => {
         [id],
         (txObj, resultSet: SQLite.SQLResultSet) => {
           if (resultSet.rowsAffected) {
-            router.replace(`/add-device/${data.idWifi}`);
           }
         },
         (txObj, error) => {
           console.log(error);
           return false;
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE wifi SET devices_count = ? WHERE id = ${data.idWifi}`,
+        [wifi[0].devices_count - 1],
+        (txObj, resultSet: SQLite.SQLResultSet) => {
+          if (resultSet.rowsAffected) {
+            router.replace(`/add-device/${data.idWifi}`);
+          }
         }
       );
     });

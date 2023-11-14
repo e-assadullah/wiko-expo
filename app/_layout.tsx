@@ -61,7 +61,6 @@ function RootLayoutNav() {
         />
         <Stack.Screen name="add-device/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="wifi/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>
   );

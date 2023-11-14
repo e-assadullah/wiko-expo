@@ -13,18 +13,20 @@ type TData = {
   id: number;
   nameEndpoint: string;
   baseIp: string;
+  idDevice: number;
   mode: string;
   valuePrimary: string;
   valueSecondary: string | null;
 };
 
 const InputEndpoint = (props: Props) => {
-  const db = SQLite.openDatabase("database.db");
+  const db = SQLite.openDatabase("database2.db");
 
   const emptyData: TData = {
     id: 0,
     nameEndpoint: "",
     baseIp: "",
+    idDevice: 0,
     mode: "",
     valuePrimary: "",
     valueSecondary: "",
@@ -36,12 +38,6 @@ const InputEndpoint = (props: Props) => {
   const [dbDataEndpoint, setDbDataEndpoint] = useState<any[]>([]);
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS endpoint (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, base_ip TEXT, mode TEXT, value_primary TEXT, value_secondary TEXT )`
-      );
-    });
-
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT * FROM device WHERE wifi_id = ${props.id}`,
@@ -86,11 +82,13 @@ const InputEndpoint = (props: Props) => {
   const addData = () => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO endpoint (id, name, base_ip, mode, value_primary, value_secondary) VALUES (null, ?, ?, ?, ? ,?)`,
+        `INSERT INTO endpoint (id, name, base_ip, mode, device_id, wifi_id, value_primary, value_secondary) VALUES (null, ?, ?, ?, ?, ?, ? ,?)`,
         [
           data.nameEndpoint,
           data.baseIp,
           data.mode,
+          data.idDevice,
+          props.id as string,
           data.valuePrimary,
           data.valueSecondary?.length ? data.valueSecondary : null,
         ],
@@ -166,12 +164,17 @@ const InputEndpoint = (props: Props) => {
       <SelectList
         setSelected={(val: any) =>
           setData((prev): TData => {
-            return { ...prev, baseIp: val };
+            return {
+              ...prev,
+              idDevice: val,
+              baseIp: dbDataDevice.filter((device: any) => val == device.id)[0]
+                .base_ip,
+            };
           })
         }
         data={dbDataDevice.map((data) => {
           return {
-            key: data.base_ip,
+            key: data.id,
             value: data.name,
           };
         })}
@@ -211,7 +214,7 @@ const InputEndpoint = (props: Props) => {
         }
         editable={false}
       />
-      {data.baseIp && (
+      {!!data.baseIp && (
         <View style={styles.showData}>
           <View>
             <Text style={styles.textHeader}>Endpoint 1</Text>
