@@ -1,7 +1,8 @@
-import { Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { View, Text } from "../../Themed";
+import { View } from "../../Themed";
 import * as SQLite from "expo-sqlite";
+import Action from "./Action";
 
 type Props = {
   id: number;
@@ -40,20 +41,20 @@ const EndpointContainer = (props: Props) => {
     });
   }, []);
 
+  const seLoading = (value: boolean) => {
+    if (value) {
+      console.log("lagi loading");
+    } else {
+      console.log("matikan loading");
+    }
+  };
+
   const showDb = () => {
     if (dbDataEndpoint?.length) {
       return dbDataEndpoint?.map((data: any) => {
         return (
           <View key={data.id} style={styles.showData}>
-            <Text>{data.name}</Text>
-            <Text>{"http://" + data.base_ip + data.value_primary}</Text>
-            <Button
-              title="Delete"
-              color={"#c1121f"}
-              onPress={() => {
-                //deleteData(data.id)
-              }}
-            />
+            <Action data={data} loading={seLoading} />
           </View>
         );
       });
@@ -62,8 +63,7 @@ const EndpointContainer = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text>EndpointContainer</Text>
-      {showDb()}
+      <View style={styles.endpointWrap}>{showDb()}</View>
     </View>
   );
 };
@@ -74,12 +74,18 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     height: "100%",
-    marginTop: 5,
+    marginTop: 10,
   },
   showData: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
+  },
+  endpointWrap: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    flexWrap: "wrap",
   },
 });
