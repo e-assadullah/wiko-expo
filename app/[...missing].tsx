@@ -11,7 +11,7 @@ export default function NotFoundScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>This screen doesn't exist.</Text>
 
-        <Link href="/" style={styles.link}>
+        <Link replace href="/" style={styles.link}>
           <Ionicons name="md-home" size={50} color="#2e78b7" />
           <Text style={styles.linkText}>Go to home screen!</Text>
         </Link>

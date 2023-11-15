@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { useColorScheme, LogBox } from "react-native";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 export {
@@ -51,18 +52,22 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="add-wifi" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="add-endpoint/[id]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="add-device/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="wifi/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
-    </ThemeProvider>
+    <RootSiblingParent>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="add-wifi" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="add-endpoint/[id]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="add-device/[id]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="wifi/[id]" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </RootSiblingParent>
   );
 }

@@ -14,7 +14,7 @@ const HomeHeader = () => {
         <Text style={styles.textBold}>Hello There...</Text>
         <Text>This is your wifi assistant</Text>
       </View>
-      <Link href={"/info"} asChild>
+      <Link replace href={"/info"} asChild>
         <Pressable>
           <Ionicons name="information-circle-outline" size={20} color="black" />
         </Pressable>
