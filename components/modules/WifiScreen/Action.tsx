@@ -1,29 +1,25 @@
-import { StyleSheet, Pressable, Switch } from "react-native";
+import { StyleSheet, Pressable, Switch, TextInput } from "react-native";
 import React, { useState } from "react";
 import { View, Text } from "../../Themed";
 import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
 import { TSeverity, getSeverity } from "../../../utils";
+import Monitoring from "./Monitoring";
 
 type Props = {
   data: any;
   loading: (value: boolean) => void;
 };
 
-const getData = (link: string) => {
-  return fetch(link)
-    .then((res) => res.json())
-    .then((json) => json);
-};
-
 const Action = (props: Props) => {
   const { base_ip, value_primary, value_secondary, mode, name } = props.data;
 
   const [switchState, setSwitchState] = useState(false);
+  const [inputState, setInputState] = useState("");
 
   const showToast = (text: string, severity: TSeverity) => {
     Toast.show(text, {
-      duration: Toast.durations.SHORT,
+      duration: 200,
       position: Toast.positions.BOTTOM - 30,
       animation: true,
       hideOnPress: true,
@@ -50,15 +46,14 @@ const Action = (props: Props) => {
                 controller.abort();
               }, 2000);
               const response = await fetch(link1, { signal: controller.signal })
-                .then((res) => res.json())
-                .then((data) => data)
+                .then((res) => res)
                 .catch((err) => {
                   throw err;
                 });
-              if (response.massage) {
-                showToast(response.message, "success");
+              if (response.statusText) {
+                showToast(response.statusText, "success");
               } else {
-                showToast("Success no massage", "success");
+                showToast("Success", "success");
               }
             } catch (error: any) {
               if (error.message === "Aborted") {
@@ -98,15 +93,14 @@ const Action = (props: Props) => {
               const response = await fetch(switchState ? link2 : link1, {
                 signal: controller.signal,
               })
-                .then((res) => res.json())
-                .then((data) => data)
+                .then((res) => res)
                 .catch((err) => {
                   throw err;
                 });
-              if (response.massage) {
-                showToast(response.message, "success");
+              if (response.statusText) {
+                showToast(response.statusText, "success");
               } else {
-                showToast("Success no massage", "success");
+                showToast("Success", "success");
               }
             } catch (error: any) {
               if (error.message === "Aborted") {
@@ -140,15 +134,14 @@ const Action = (props: Props) => {
                   const response = await fetch(switchState ? link2 : link1, {
                     signal: controller.signal,
                   })
-                    .then((res) => res.json())
-                    .then((data) => data)
+                    .then((res) => res)
                     .catch((err) => {
                       throw err;
                     });
-                  if (response.massage) {
-                    showToast(response.message, "success");
+                  if (response.statusText) {
+                    showToast(response.statusText, "success");
                   } else {
-                    showToast("Success no massage", "success");
+                    showToast("Success", "success");
                   }
                 } catch (error: any) {
                   if (error.message === "Aborted") {
@@ -168,21 +161,57 @@ const Action = (props: Props) => {
         </Pressable>
       );
     case "monitoring":
-      return (
-        <View style={styles.container}>
-          <Text>{mode}</Text>
-        </View>
-      );
+      return <Monitoring link={link1} name={name} />;
     case "input":
       return (
-        <View style={styles.container}>
+        <View style={styles.containerInput}>
           <Text>{name}</Text>
-          <Text>{mode}</Text>
+          <TextInput
+            style={styles.input}
+            value={inputState}
+            onChangeText={(text) => setInputState(text)}
+          />
+          <Pressable
+            onPress={async () => {
+              const controller = new AbortController();
+              try {
+                props.loading(true);
+                setTimeout(() => {
+                  controller.abort();
+                }, 2000);
+                const response = await fetch(link1 + "?value=" + inputState, {
+                  signal: controller.signal,
+                })
+                  .then((res) => res)
+                  .catch((err) => {
+                    throw err;
+                  });
+                if (response.statusText) {
+                  showToast(response.statusText, "success");
+                } else {
+                  showToast("Success", "success");
+                }
+              } catch (error: any) {
+                if (error.message === "Aborted") {
+                  showToast("Error: Took too long to response", "error");
+                } else {
+                  showToast(`Error: ${error.message}`, "error");
+                  console.log(error);
+                }
+              } finally {
+                props.loading(false);
+              }
+            }}
+          >
+            <View style={styles.button}>
+              <Text style={{ fontWeight: "500", color: "white" }}>Send</Text>
+            </View>
+          </Pressable>
         </View>
       );
     default:
       return (
-        <View>
+        <View style={styles.container}>
           <Text>No mode detect</Text>
         </View>
       );
@@ -210,7 +239,43 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     marginBottom: 5,
   },
+  containerInput: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginBottom: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    gap: 5,
+  },
   bgGray: {
     backgroundColor: "#e9ecef",
+  },
+  input: {
+    paddingHorizontal: 8,
+    width: "100%",
+    height: 30,
+    borderColor: "#000000",
+    borderWidth: 0.5,
+    borderRadius: 5,
+  },
+  button: {
+    width: "100%",
+    paddingHorizontal: 10,
+    paddingVertical: 1,
+    backgroundColor: "#118ab2",
+    borderRadius: 10,
   },
 });
