@@ -1,29 +1,30 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import WifiHeader from "../../components/modules/WifiScreen/WifiHeader";
-import EndpointContainer from "../../components/modules/WifiScreen/EndpointContainer";
+import { View, Text } from "../../components/Themed";
+import HeaderMenu from "../../components/modules/PlatformScreen/HeaderMenu";
 import * as SQLite from "expo-sqlite";
+import { IPlatform } from "../../components/modules/AddPlatformScreen/InputPlatform";
 
-type Props = {
+type TProps = {
   id: string | string[];
 };
 
-const WifiScreen = (props: Props) => {
+const PlatformScreen = (props: TProps) => {
   const db = SQLite.openDatabase("database2.db");
-  const [wifi, setWifi] = useState<any>();
+  const [platform, setPlatform] = useState<IPlatform>();
 
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT * FROM wifi WHERE id = ${props.id as string}`,
+        `SELECT * FROM platform WHERE id = ${props.id as string}`,
         undefined,
         (txObj, resultSet) => {
           if (resultSet.rows.length) {
-            let temp = [];
+            let temp: IPlatform[] = [];
             for (let i = 0; i < resultSet.rows.length; ++i) {
               temp.push(resultSet.rows.item(i));
             }
-            return setWifi(temp[0]);
+            return setPlatform(temp[0]);
           }
         },
         (txObj, error) => {
@@ -34,20 +35,18 @@ const WifiScreen = (props: Props) => {
     });
   }, []);
 
-  const name = "Home";
   return (
     <View style={styles.container}>
-      <WifiHeader
-        id={props.id}
-        name={wifi ? wifi.name : name}
-        devices={wifi ? wifi.devices_count : 0}
+      <HeaderMenu
+        id={platform ? platform.id : "1"}
+        name={platform ? platform.name : "Home"}
+        function={platform ? platform.function_count : 0}
       />
-      <EndpointContainer id={parseInt(props.id as string)} />
     </View>
   );
 };
 
-export default WifiScreen;
+export default PlatformScreen;
 
 const styles = StyleSheet.create({
   container: {

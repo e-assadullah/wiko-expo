@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import HomeHeader from "../../components/modules/HomeScreen/HomeHeader";
 import CardActive from "../../components/modules/HomeScreen/CardActive";
@@ -10,10 +10,14 @@ import CardInterface, {
 import { FlatList } from "react-native-gesture-handler";
 import * as SQLite from "expo-sqlite";
 import EmptyCard from "../../components/modules/HomeScreen/EmptyCard";
+import PlatformHeader from "../../components/modules/HomeScreen/PlatformHeader";
+import { IPlatform } from "../../components/modules/AddPlatformScreen/InputPlatform";
+import CardPlatform from "../../components/modules/HomeScreen/CardPlatform";
 
 const HomeScreen = () => {
   const db = SQLite.openDatabase("database2.db");
   const [wifi, setWifi] = useState<IWifi[]>([]);
+  const [platform, setPlatform] = useState<IPlatform[]>([]);
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -24,11 +28,17 @@ const HomeScreen = () => {
 
     db.transaction((tx) => {
       tx.executeSql(
+        `CREATE TABLE IF NOT EXISTS platform (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, platform TEXT, icons TEXT, token TEXT, function_count INTEGER)`
+      );
+    });
+
+    db.transaction((tx) => {
+      tx.executeSql(
         "SELECT * FROM wifi",
         undefined,
         (txObj, resultSet) => {
           if (resultSet.rows.length) {
-            let temp = [];
+            let temp: any[] = [];
             for (let i = 0; i < resultSet.rows.length; ++i) {
               temp.push(resultSet.rows.item(i));
             }
@@ -41,22 +51,53 @@ const HomeScreen = () => {
         }
       );
     });
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM platform",
+        undefined,
+        (txObj, resultSet) => {
+          if (resultSet.rows.length) {
+            let temp = [];
+            for (let i = 0; i < resultSet.rows.length; ++i) {
+              temp.push(resultSet.rows.item(i));
+            }
+            console.log(temp);
+            return setPlatform(temp);
+          }
+        },
+        (txObj, error) => {
+          console.log(error);
+          return false;
+        }
+      );
+    });
   }, []);
 
   return (
-    <View style={styles.container}>
-      <HomeHeader />
-      <Text style={styles.heading}>Active Interface</Text>
-      <CardActive />
-      <InterfaceHeader />
-      {!wifi.length && <EmptyCard />}
-      <FlatList
-        data={wifi}
-        renderItem={({ item }) => <CardInterface {...item} />}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-      />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <HomeHeader />
+        <Text style={styles.heading}>Active Interface</Text>
+        <CardActive />
+        <InterfaceHeader />
+        {!wifi.length && <EmptyCard />}
+        <FlatList
+          data={wifi}
+          renderItem={({ item }) => <CardInterface {...item} />}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+        />
+        <PlatformHeader />
+        {!platform.length && <EmptyCard platform />}
+        <FlatList
+          data={platform}
+          renderItem={({ item }) => <CardPlatform {...item} />}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+        />
+      </View>
+    </ScrollView>
   );
 };
 

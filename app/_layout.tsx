@@ -57,6 +57,7 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="add-wifi" options={{ headerShown: false }} />
+          <Stack.Screen name="add-platform" options={{ headerShown: false }} />
           <Stack.Screen
             name="add-endpoint/[id]"
             options={{ headerShown: false }}
@@ -66,6 +67,7 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="wifi/[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="platform/[id]" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </RootSiblingParent>

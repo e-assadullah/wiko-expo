@@ -1,9 +1,11 @@
-import { Button, StyleSheet, TextInput } from "react-native";
+import { Button, FlatList, StyleSheet, TextInput } from "react-native";
 import { useEffect, useState } from "react";
 import { View, Text } from "../../Themed";
 import * as SQLite from "expo-sqlite";
 import { router } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
+import Toast from "react-native-root-toast";
+import { TSeverity, getSeverity } from "../../../utils";
 
 type Props = {
   id: string | string[];
@@ -79,7 +81,45 @@ const InputEndpoint = (props: Props) => {
     });
   }, []);
 
+  const validate = () => {
+    if (
+      data.baseIp.length &&
+      data.nameEndpoint.length &&
+      data.baseIp.length &&
+      data.valuePrimary.length
+    ) {
+      if (data.mode.length) {
+        if (data.mode === "switch") {
+          if (data.valueSecondary?.length) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const showToast = (text: string, severity: TSeverity) => {
+    Toast.show(text, {
+      duration: 2000,
+      position: Toast.positions.BOTTOM - 30,
+      animation: true,
+      hideOnPress: true,
+      backgroundColor: getSeverity(severity),
+      textColor: "white",
+      opacity: 1,
+    });
+  };
+
   const addData = () => {
+    if (!validate()) {
+      return showToast("Error: Input field must be not empty", "error");
+    }
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO endpoint (id, name, base_ip, mode, device_id, wifi_id, value_primary, value_secondary) VALUES (null, ?, ?, ?, ?, ?, ? ,?)`,
@@ -124,22 +164,18 @@ const InputEndpoint = (props: Props) => {
     });
   };
 
-  const showDb = () => {
-    if (dbDataEndpoint?.length) {
-      return dbDataEndpoint?.map((data: any, i) => {
-        return (
-          <View key={data.id} style={styles.showData}>
-            <Text>{data.name}</Text>
-            <Text>{"http://" + data.base_ip + data.value_primary}</Text>
-            <Button
-              title="Delete"
-              color={"#c1121f"}
-              onPress={() => deleteData(data.id)}
-            />
-          </View>
-        );
-      });
-    }
+  const ComponentView = (props: any) => {
+    return (
+      <View key={props.id} style={styles.showData}>
+        <Text>{props.id}</Text>
+        <Text>{"http://" + props.base_ip + props.value_primary}</Text>
+        <Button
+          title="Delete"
+          color={"#c1121f"}
+          onPress={() => deleteData(props.id)}
+        />
+      </View>
+    );
   };
 
   const optionMode = [
@@ -195,7 +231,7 @@ const InputEndpoint = (props: Props) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Path 1 e.g /led/0"
+        placeholder="Path 1 e.g /led/1"
         value={data?.valuePrimary}
         onChangeText={(valuePrimary) =>
           setData((prev): TData => {
@@ -203,17 +239,18 @@ const InputEndpoint = (props: Props) => {
           })
         }
       />
-      <TextInput
-        style={styles.inputDisable}
-        placeholder="Path 2"
-        value={data?.valueSecondary as string}
-        onChangeText={(valueSecondary) =>
-          setData((prev): TData => {
-            return { ...prev, valueSecondary };
-          })
-        }
-        editable={false}
-      />
+      {data.mode === "switch" && (
+        <TextInput
+          style={styles.input}
+          placeholder="Path 2 e.g /led/0"
+          value={data?.valueSecondary as string}
+          onChangeText={(valueSecondary) =>
+            setData((prev): TData => {
+              return { ...prev, valueSecondary };
+            })
+          }
+        />
+      )}
       {!!data.baseIp && (
         <View style={styles.showData}>
           <View>
@@ -231,7 +268,11 @@ const InputEndpoint = (props: Props) => {
         </View>
       )}
       <Button title="Add Endpoint" onPress={() => addData()} />
-      <View style={{ marginTop: 20 }}>{showDb()}</View>
+      <FlatList
+        data={dbDataEndpoint}
+        renderItem={({ item }) => <ComponentView {...item} />}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
 };
