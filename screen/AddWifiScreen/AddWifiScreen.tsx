@@ -15,7 +15,7 @@ type TData = {
 };
 
 const AddWifiScreen = () => {
-  const db = SQLite.openDatabase("database2.db");
+  const db = SQLite.openDatabase("database3.db");
   const [loading, setLoading] = useState<boolean>(true);
 
   const emptyData: TData = {

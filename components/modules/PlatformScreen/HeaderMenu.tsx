@@ -7,7 +7,6 @@ import { View, Text } from "../../Themed";
 type Props = {
   id: string | string[];
   name: string;
-  function: number;
 };
 
 const HeaderMenu = (props: Props) => {
@@ -19,7 +18,7 @@ const HeaderMenu = (props: Props) => {
             <Ionicons name="arrow-back" size={24} color="black" />
           </Pressable>
         </Link>
-        <Text style={styles.textHead}>{props.name + " " + props.id}</Text>
+        <Text style={styles.textHead}>{props.name}</Text>
         <Link replace href="/" asChild>
           <Pressable>
             <Ionicons name="ios-settings-outline" size={24} color="black" />
@@ -27,25 +26,11 @@ const HeaderMenu = (props: Props) => {
         </Link>
       </View>
       <View style={styles.header}>
-        <Link replace href={`/add-device/${props.id}`} asChild>
+        <Link replace href={`/add-function/${props.id}`} asChild>
           <Pressable>
             <View style={styles.button}>
               <Ionicons name="add-circle" size={24} color="black" />
-              <Text style={styles.textAdd}>Add Device</Text>
-            </View>
-          </Pressable>
-        </Link>
-        <Link replace href={`/add-endpoint/${props.id}`} asChild>
-          <Pressable disabled={props.function === 0}>
-            <View
-              style={
-                props.function === 0
-                  ? [styles.button, styles.onDisable]
-                  : styles.button
-              }
-            >
-              <Ionicons name="add-circle" size={24} color="black" />
-              <Text style={styles.textAdd}>Add Endpoint</Text>
+              <Text style={styles.textAdd}>Add function</Text>
             </View>
           </Pressable>
         </Link>

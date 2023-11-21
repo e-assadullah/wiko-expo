@@ -17,7 +17,7 @@ export type IPlatform = {
 };
 
 const InputPlatform = () => {
-  const db = SQLite.openDatabase("database2.db");
+  const db = SQLite.openDatabase("database3.db");
 
   type PlatformList = {
     value: string;

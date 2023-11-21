@@ -9,7 +9,7 @@ type Props = {
 };
 
 const EndpointContainer = (props: Props) => {
-  const db = SQLite.openDatabase("database2.db");
+  const db = SQLite.openDatabase("database3.db");
 
   const [dbDataEndpoint, setDbDataEndpoint] = useState<any[]>([]);
 

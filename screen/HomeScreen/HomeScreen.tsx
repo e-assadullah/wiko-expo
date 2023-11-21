@@ -15,7 +15,7 @@ import { IPlatform } from "../../components/modules/AddPlatformScreen/InputPlatf
 import CardPlatform from "../../components/modules/HomeScreen/CardPlatform";
 
 const HomeScreen = () => {
-  const db = SQLite.openDatabase("database2.db");
+  const db = SQLite.openDatabase("database3.db");
   const [wifi, setWifi] = useState<IWifi[]>([]);
   const [platform, setPlatform] = useState<IPlatform[]>([]);
 
@@ -62,7 +62,6 @@ const HomeScreen = () => {
             for (let i = 0; i < resultSet.rows.length; ++i) {
               temp.push(resultSet.rows.item(i));
             }
-            console.log(temp);
             return setPlatform(temp);
           }
         },

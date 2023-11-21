@@ -9,7 +9,7 @@ type Props = {
 };
 
 const WifiScreen = (props: Props) => {
-  const db = SQLite.openDatabase("database2.db");
+  const db = SQLite.openDatabase("database3.db");
   const [wifi, setWifi] = useState<any>();
 
   useEffect(() => {

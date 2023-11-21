@@ -59,6 +59,10 @@ function RootLayoutNav() {
           <Stack.Screen name="add-wifi" options={{ headerShown: false }} />
           <Stack.Screen name="add-platform" options={{ headerShown: false }} />
           <Stack.Screen
+            name="add-function/[id]"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="add-endpoint/[id]"
             options={{ headerShown: false }}
           />
