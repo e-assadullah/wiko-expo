@@ -13,13 +13,24 @@ import EmptyCard from "../../components/modules/HomeScreen/EmptyCard";
 import PlatformHeader from "../../components/modules/HomeScreen/PlatformHeader";
 import { IPlatform } from "../../components/modules/AddPlatformScreen/InputPlatform";
 import CardPlatform from "../../components/modules/HomeScreen/CardPlatform";
+import WifiManager from "react-native-wifi-reborn";
 
 const HomeScreen = () => {
   const db = SQLite.openDatabase("database3.db");
   const [wifi, setWifi] = useState<IWifi[]>([]);
   const [platform, setPlatform] = useState<IPlatform[]>([]);
+  const [ssid, setSsid] = useState("");
 
   useEffect(() => {
+    WifiManager?.getCurrentWifiSSID().then(
+      (ssid) => {
+        setSsid(ssid);
+      },
+      () => {
+        console.log("Cannot get current SSID!");
+      }
+    );
+
     db.transaction((tx) => {
       tx.executeSql(
         `CREATE TABLE IF NOT EXISTS wifi (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, ssid TEXT, ip_address TEXT, icons TEXT, devices_count INTEGER)`
@@ -78,7 +89,7 @@ const HomeScreen = () => {
       <View style={styles.container}>
         <HomeHeader />
         <Text style={styles.heading}>Active Interface</Text>
-        <CardActive />
+        <CardActive ssid={ssid} />
         <InterfaceHeader />
         {!wifi.length && <EmptyCard />}
         <FlatList

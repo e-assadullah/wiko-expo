@@ -10,7 +10,7 @@ type Props = {
 const AddDeviceScreen = (props: Props) => {
   return (
     <View style={styles.container}>
-      <AddDeviceHeader />
+      <AddDeviceHeader {...props} />
       <InputDevice {...props} />
     </View>
   );

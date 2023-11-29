@@ -8,7 +8,7 @@ const InterfaceHeader = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Interface Wifi</Text>
-      <Link replace href="/add-wifi" asChild>
+      <Link href="/add-wifi" asChild>
         <Pressable>
           <View style={styles.button}>
             <Ionicons name="add-circle" size={24} color="black" />

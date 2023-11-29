@@ -37,7 +37,7 @@ const InputEndpoint = (props: Props) => {
   const [data, setData] = useState<TData>(emptyData);
 
   const [dbDataDevice, setDbDataDevice] = useState<any[]>([]);
-  const [dbDataEndpoint, setDbDataEndpoint] = useState<any[]>([]);
+  // const [dbDataEndpoint, setDbDataEndpoint] = useState<any[]>([]);
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -60,25 +60,25 @@ const InputEndpoint = (props: Props) => {
       );
     });
 
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM endpoint`,
-        undefined,
-        (txObj, resultSet) => {
-          if (resultSet.rows.length) {
-            let temp: any[] = [];
-            for (let i = 0; i < resultSet.rows.length; ++i) {
-              temp.push(resultSet.rows.item(i));
-            }
-            return setDbDataEndpoint(temp);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
+    // db.transaction((tx) => {
+    //   tx.executeSql(
+    //     `SELECT * FROM endpoint`,
+    //     undefined,
+    //     (txObj, resultSet) => {
+    //       if (resultSet.rows.length) {
+    //         let temp: any[] = [];
+    //         for (let i = 0; i < resultSet.rows.length; ++i) {
+    //           temp.push(resultSet.rows.item(i));
+    //         }
+    //         return setDbDataEndpoint(temp);
+    //       }
+    //     },
+    //     (txObj, error) => {
+    //       console.log(error);
+    //       return false;
+    //     }
+    //   );
+    // });
   }, []);
 
   const validate = () => {
@@ -146,37 +146,37 @@ const InputEndpoint = (props: Props) => {
     });
   };
 
-  const deleteData = (id: number) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM endpoint WHERE id = ?`,
-        [id],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            router.replace(`/add-endpoint/${props.id}`);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-  };
+  // const deleteData = (id: number) => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `DELETE FROM endpoint WHERE id = ?`,
+  //       [id],
+  //       (txObj, resultSet: SQLite.SQLResultSet) => {
+  //         if (resultSet.rowsAffected) {
+  //           router.replace(`/add-endpoint/${props.id}`);
+  //         }
+  //       },
+  //       (txObj, error) => {
+  //         console.log(error);
+  //         return false;
+  //       }
+  //     );
+  //   });
+  // };
 
-  const ComponentView = (props: any) => {
-    return (
-      <View key={props.id} style={styles.showData}>
-        <Text>{props.id}</Text>
-        <Text>{"http://" + props.base_ip + props.value_primary}</Text>
-        <Button
-          title="Delete"
-          color={"#c1121f"}
-          onPress={() => deleteData(props.id)}
-        />
-      </View>
-    );
-  };
+  // const ComponentView = (props: any) => {
+  //   return (
+  //     <View key={props.id} style={styles.showData}>
+  //       <Text>{props.id}</Text>
+  //       <Text>{"http://" + props.base_ip + props.value_primary}</Text>
+  //       <Button
+  //         title="Delete"
+  //         color={"#c1121f"}
+  //         onPress={() => deleteData(props.id)}
+  //       />
+  //     </View>
+  //   );
+  // };
 
   const optionMode = [
     { key: "1", value: "button" },
@@ -268,11 +268,11 @@ const InputEndpoint = (props: Props) => {
         </View>
       )}
       <Button title="Add Endpoint" onPress={() => addData()} />
-      <FlatList
+      {/* <FlatList
         data={dbDataEndpoint}
         renderItem={({ item }) => <ComponentView {...item} />}
         keyExtractor={(item) => item.id.toString()}
-      />
+      /> */}
     </View>
   );
 };

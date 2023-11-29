@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.assadullahz.wikoexpo"
     },
     "web": {
       "bundler": "metro",
@@ -30,10 +31,22 @@
       "favicon": "./assets/images/icons.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router", [   
+        "react-native-wifi-reborn",
+      {
+        "fineLocationPermission": false
+      }]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7eb15506-5dea-4bbe-8ad3-b01887526a59"
+      }
     }
   }
 }

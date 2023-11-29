@@ -7,7 +7,7 @@ import { IPlatform } from "../AddPlatformScreen/InputPlatform";
 
 const CardPlatform = (props: IPlatform) => {
   return (
-    <Link replace href={`/platform/${props.id}`} asChild>
+    <Link href={`/platform/${props.id}`} asChild>
       <Pressable>
         <View style={styles.container}>
           <View style={styles.icons}>

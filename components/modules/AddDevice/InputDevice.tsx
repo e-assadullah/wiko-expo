@@ -27,7 +27,7 @@ const InputDevice = (props: Props) => {
 
   const [data, setData] = useState<TData>(emptyData);
 
-  const [dbData, setDbData] = useState<any[]>([]);
+  // const [dbData, setDbData] = useState<any[]>([]);
 
   const [wifi, setWifi] = useState<any[]>([]);
 
@@ -58,25 +58,25 @@ const InputDevice = (props: Props) => {
       );
     });
 
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM device",
-        undefined,
-        (txObj, resultSet) => {
-          if (resultSet.rows.length) {
-            let temp: any[] = [];
-            for (let i = 0; i < resultSet.rows.length; ++i) {
-              temp.push(resultSet.rows.item(i));
-            }
-            return setDbData(temp);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
+    // db.transaction((tx) => {
+    //   tx.executeSql(
+    //     "SELECT * FROM device",
+    //     undefined,
+    //     (txObj, resultSet) => {
+    //       if (resultSet.rows.length) {
+    //         let temp: any[] = [];
+    //         for (let i = 0; i < resultSet.rows.length; ++i) {
+    //           temp.push(resultSet.rows.item(i));
+    //         }
+    //         return setDbData(temp);
+    //       }
+    //     },
+    //     (txObj, error) => {
+    //       console.log(error);
+    //       return false;
+    //     }
+    //   );
+    // });
   }, []);
 
   const addData = () => {
@@ -101,58 +101,58 @@ const InputDevice = (props: Props) => {
         (txObj, resultSet: SQLite.SQLResultSet) => {
           if (resultSet.rowsAffected) {
             setData(emptyData);
-            router.replace(`/add-device/${data.idWifi}`);
+            router.replace(`/wifi/${data.idWifi}`);
           }
         }
       );
     });
   };
 
-  const deleteData = (id: number) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM device WHERE id = ?`,
-        [id],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-    db.transaction((tx) => {
-      tx.executeSql(
-        `UPDATE wifi SET devices_count = ? WHERE id = ${data.idWifi}`,
-        [wifi[0].devices_count - 1],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            router.replace(`/add-device/${data.idWifi}`);
-          }
-        }
-      );
-    });
-  };
+  // const deleteData = (id: number) => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `DELETE FROM device WHERE id = ?`,
+  //       [id],
+  //       (txObj, resultSet: SQLite.SQLResultSet) => {
+  //         if (resultSet.rowsAffected) {
+  //         }
+  //       },
+  //       (txObj, error) => {
+  //         console.log(error);
+  //         return false;
+  //       }
+  //     );
+  //   });
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `UPDATE wifi SET devices_count = ? WHERE id = ${data.idWifi}`,
+  //       [wifi[0].devices_count - 1],
+  //       (txObj, resultSet: SQLite.SQLResultSet) => {
+  //         if (resultSet.rowsAffected) {
+  //           router.replace(`/add-device/${data.idWifi}`);
+  //         }
+  //       }
+  //     );
+  //   });
+  // };
 
-  const showDb = () => {
-    if (dbData?.length) {
-      return dbData?.map((data: any, i) => {
-        return (
-          <View key={data.id} style={styles.showData}>
-            <Text>{data.name}</Text>
-            <Text>{data.wifi_id}</Text>
-            <Button
-              title="Delete"
-              color={"#c1121f"}
-              onPress={() => deleteData(data.id)}
-            />
-          </View>
-        );
-      });
-    }
-  };
+  // const showDb = () => {
+  //   if (dbData?.length) {
+  //     return dbData?.map((data: any, i) => {
+  //       return (
+  //         <View key={data.id} style={styles.showData}>
+  //           <Text>{data.name}</Text>
+  //           <Text>{data.wifi_id}</Text>
+  //           <Button
+  //             title="Delete"
+  //             color={"#c1121f"}
+  //             onPress={() => deleteData(data.id)}
+  //           />
+  //         </View>
+  //       );
+  //     });
+  //   }
+  // };
 
   return (
     <View style={styles.inputWrapper}>
@@ -177,7 +177,7 @@ const InputDevice = (props: Props) => {
         }
       />
       <Button title="Add Device" onPress={() => addData()} />
-      <View style={{ marginTop: 20 }}>{showDb()}</View>
+      {/* <View style={{ marginTop: 20 }}>{showDb()}</View> */}
     </View>
   );
 };

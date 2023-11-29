@@ -5,6 +5,7 @@ import * as SQLite from "expo-sqlite";
 import { TextInput } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import SelectIcons from "../../components/common/SelectIcons";
 
 type TData = {
   id: number;
@@ -28,7 +29,7 @@ const AddWifiScreen = () => {
 
   const [data, setData] = useState<TData>(emptyData);
 
-  const [dbData, setDbData] = useState<any[]>([]);
+  // const [dbData, setDbData] = useState<any[]>([]);
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -37,81 +38,90 @@ const AddWifiScreen = () => {
       );
     });
 
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM wifi",
-        undefined,
-        (txObj, resultSet) => {
-          if (resultSet.rows.length) {
-            let temp: any[] = [];
-            for (let i = 0; i < resultSet.rows.length; ++i) {
-              temp.push(resultSet.rows.item(i));
-            }
-            return setDbData(temp);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
+    // db.transaction((tx) => {
+    //   tx.executeSql(
+    //     "SELECT * FROM wifi",
+    //     undefined,
+    //     (txObj, resultSet) => {
+    //       if (resultSet.rows.length) {
+    //         let temp: any[] = [];
+    //         for (let i = 0; i < resultSet.rows.length; ++i) {
+    //           temp.push(resultSet.rows.item(i));
+    //         }
+    //         return setDbData(temp);
+    //       }
+    //     },
+    //     (txObj, error) => {
+    //       console.log(error);
+    //       return false;
+    //     }
+    //   );
+    // });
     setLoading(false);
   }, []);
 
+  const verifyData = () => {
+    if (!data.name.length || !data.ssid || !data.icons) {
+      return false;
+    }
+    return true;
+  };
+
   const addData = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `INSERT INTO wifi (id, name, ssid, ip_address, icons, devices_count) VALUES (null, ?, ?, ?, ?, 0)`,
-        [data.name, data.ssid, data.ipAddress, data.icons],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            setData(emptyData);
-            router.replace("/");
+    if (verifyData()) {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `INSERT INTO wifi (id, name, ssid, ip_address, icons, devices_count) VALUES (null, ?, ?, ?, ?, 0)`,
+          [data.name, data.ssid, data.ipAddress, data.icons],
+          (txObj, resultSet: SQLite.SQLResultSet) => {
+            if (resultSet.rowsAffected) {
+              setData(emptyData);
+              router.replace("/");
+            }
+          },
+          (txObj, error) => {
+            console.log(error);
+            return false;
           }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-  };
-
-  const deleteData = (id: number) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM wifi WHERE id = ?`,
-        [id],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            router.replace("/");
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-  };
-
-  const showDb = () => {
-    if (dbData?.length) {
-      return dbData?.map((data: any, i) => {
-        return (
-          <View key={data.id} style={styles.showData}>
-            <Text>{data.devices_count}</Text>
-            <Button
-              title="Delete"
-              color={"#c1121f"}
-              onPress={() => deleteData(data.id)}
-            />
-          </View>
         );
       });
     }
   };
+
+  // const deleteData = (id: number) => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `DELETE FROM wifi WHERE id = ?`,
+  //       [id],
+  //       (txObj, resultSet: SQLite.SQLResultSet) => {
+  //         if (resultSet.rowsAffected) {
+  //           router.replace("/");
+  //         }
+  //       },
+  //       (txObj, error) => {
+  //         console.log(error);
+  //         return false;
+  //       }
+  //     );
+  //   });
+  // };
+
+  // const showDb = () => {
+  //   if (dbData?.length) {
+  //     return dbData?.map((data: any, i) => {
+  //       return (
+  //         <View key={data.id} style={styles.showData}>
+  //           <Text>{data.devices_count}</Text>
+  //           <Button
+  //             title="Delete"
+  //             color={"#c1121f"}
+  //             onPress={() => deleteData(data.id)}
+  //           />
+  //         </View>
+  //       );
+  //     });
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -174,7 +184,6 @@ const AddWifiScreen = () => {
         />
         <Button title="Add Data" onPress={() => addData()} />
       </View>
-      <View style={{ marginTop: 20 }}>{showDb()}</View>
     </View>
   );
 };
@@ -200,10 +209,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   inputWrapper: {
-    marginTop: 10,
+    marginTop: 30,
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 20,
+    height: "100%",
   },
   input: {
     padding: 10,

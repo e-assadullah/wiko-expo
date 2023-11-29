@@ -8,7 +8,7 @@ const PlatformHeader = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Platform IOT</Text>
-      <Link replace href="/add-platform" asChild>
+      <Link href="/add-platform" asChild>
         <Pressable>
           <View style={styles.button}>
             <Ionicons name="add-circle" size={24} color="black" />

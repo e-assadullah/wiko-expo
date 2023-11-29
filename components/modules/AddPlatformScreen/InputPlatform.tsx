@@ -42,7 +42,7 @@ const InputPlatform = () => {
 
   const [data, setData] = useState<IPlatform>(emptyData);
 
-  const [dbData, setDbData] = useState<IPlatform[]>();
+  // const [dbData, setDbData] = useState<IPlatform[]>();
 
   const validate = () => {
     if (data.icons && data.name && data.platform && data.token) {
@@ -53,26 +53,26 @@ const InputPlatform = () => {
   };
 
   useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM platform`,
-        undefined,
-        (txObj, resultSet) => {
-          if (resultSet.rows.length) {
-            let temp: IPlatform[] = [];
-            for (let i = 0; i < resultSet.rows.length; ++i) {
-              temp.push(resultSet.rows.item(i));
-            }
-            console.log(temp);
-            return setDbData(temp);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
+    // db.transaction((tx) => {
+    //   tx.executeSql(
+    //     `SELECT * FROM platform`,
+    //     undefined,
+    //     (txObj, resultSet) => {
+    //       if (resultSet.rows.length) {
+    //         let temp: IPlatform[] = [];
+    //         for (let i = 0; i < resultSet.rows.length; ++i) {
+    //           temp.push(resultSet.rows.item(i));
+    //         }
+    //         console.log(temp);
+    //         return setDbData(temp);
+    //       }
+    //     },
+    //     (txObj, error) => {
+    //       console.log(error);
+    //       return false;
+    //     }
+    //   );
+    // });
   }, []);
 
   const showToast = (text: string, severity: TSeverity) => {
@@ -111,40 +111,40 @@ const InputPlatform = () => {
     });
   };
 
-  const deleteData = (id: string | string[]) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM platform WHERE id = ?`,
-        [parseInt(id as string)],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            router.replace("/");
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-  };
+  // const deleteData = (id: string | string[]) => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `DELETE FROM platform WHERE id = ?`,
+  //       [parseInt(id as string)],
+  //       (txObj, resultSet: SQLite.SQLResultSet) => {
+  //         if (resultSet.rowsAffected) {
+  //           router.replace("/");
+  //         }
+  //       },
+  //       (txObj, error) => {
+  //         console.log(error);
+  //         return false;
+  //       }
+  //     );
+  //   });
+  // };
 
-  const showDb = () => {
-    if (dbData?.length) {
-      return dbData?.map((data: IPlatform, i) => {
-        return (
-          <View key={data.id as string} style={styles.showData}>
-            <Text>{data.id}</Text>
-            <Button
-              title="Delete"
-              color={"#c1121f"}
-              onPress={() => deleteData(data.id as string)}
-            />
-          </View>
-        );
-      });
-    }
-  };
+  // const showDb = () => {
+  //   if (dbData?.length) {
+  //     return dbData?.map((data: IPlatform, i) => {
+  //       return (
+  //         <View key={data.id as string} style={styles.showData}>
+  //           <Text>{data.id}</Text>
+  //           <Button
+  //             title="Delete"
+  //             color={"#c1121f"}
+  //             onPress={() => deleteData(data.id as string)}
+  //           />
+  //         </View>
+  //       );
+  //     });
+  //   }
+  // };
 
   return (
     <View style={styles.inputWrapper}>
@@ -157,6 +157,7 @@ const InputPlatform = () => {
         data={listPlatform}
         placeholder="Select platform"
         boxStyles={styles.inputBox}
+        inputStyles={{ color: data.platform.length ? "black" : "gray" }}
       />
       <TextInput
         style={styles.input}
@@ -189,7 +190,7 @@ const InputPlatform = () => {
         }
       />
       <Button title="Add Endpoint" onPress={() => addData()} />
-      <View style={{ marginTop: 20 }}>{showDb()}</View>
+      {/* <View style={{ marginTop: 20 }}>{showDb()}</View> */}
     </View>
   );
 };
@@ -198,22 +199,24 @@ export default InputPlatform;
 
 const styles = StyleSheet.create({
   inputWrapper: {
-    marginTop: 10,
+    marginTop: 30,
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 20,
+    height: "100%",
   },
   input: {
     padding: 10,
     height: 40,
     borderColor: "#000000",
-    borderWidth: 0.5,
+    borderWidth: 0.2,
     borderRadius: 5,
   },
   inputBox: {
     borderColor: "#000000",
-    borderWidth: 0.5,
+    borderWidth: 0.2,
     borderRadius: 5,
+    color: "gray",
   },
   showData: {
     display: "flex",

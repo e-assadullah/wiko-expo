@@ -26,7 +26,7 @@ const HeaderMenu = (props: Props) => {
         </Link>
       </View>
       <View style={styles.header}>
-        <Link replace href={`/add-function/${props.id}`} asChild>
+        <Link href={`/add-function/${props.id}`} asChild>
           <Pressable>
             <View style={styles.button}>
               <Ionicons name="add-circle" size={24} color="black" />

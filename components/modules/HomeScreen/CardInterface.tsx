@@ -15,7 +15,7 @@ export interface IWifi {
 
 const CardInterface = (props: IWifi) => {
   return (
-    <Link replace href={`/wifi/${props.id}`} asChild>
+    <Link href={`/wifi/${props.id}`} asChild>
       <Pressable>
         <View style={styles.container}>
           <View style={styles.icons}>

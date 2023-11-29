@@ -3,10 +3,14 @@ import React from "react";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-const AddDeviceHeader = () => {
+type Props = {
+  id: string | string[];
+};
+
+const AddDeviceHeader = (props: Props) => {
   return (
     <View style={styles.header}>
-      <Pressable onPress={() => router.replace("/")}>
+      <Pressable onPress={() => router.replace(`/wifi/${props.id as string}`)}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </Pressable>
       <Text style={styles.textHead}>Add new device</Text>

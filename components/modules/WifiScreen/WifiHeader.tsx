@@ -19,7 +19,7 @@ const WifiHeader = (props: Props) => {
             <Ionicons name="arrow-back" size={24} color="black" />
           </Pressable>
         </Link>
-        <Text style={styles.textHead}>{props.name + " " + props.id}</Text>
+        <Text style={styles.textHead}>{props.name}</Text>
         <Link replace href="/" asChild>
           <Pressable>
             <Ionicons name="ios-settings-outline" size={24} color="black" />
@@ -27,7 +27,7 @@ const WifiHeader = (props: Props) => {
         </Link>
       </View>
       <View style={styles.header}>
-        <Link replace href={`/add-device/${props.id}`} asChild>
+        <Link href={`/add-device/${props.id}`} asChild>
           <Pressable>
             <View style={styles.button}>
               <Ionicons name="add-circle" size={24} color="black" />
@@ -35,7 +35,7 @@ const WifiHeader = (props: Props) => {
             </View>
           </Pressable>
         </Link>
-        <Link replace href={`/add-endpoint/${props.id}`} asChild>
+        <Link href={`/add-endpoint/${props.id}`} asChild>
           <Pressable disabled={props.devices === 0}>
             <View
               style={
