@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     padding: 26,
     marginTop: 5,
+    height: "100%",
   },
   displayView: {
     display: "flex",

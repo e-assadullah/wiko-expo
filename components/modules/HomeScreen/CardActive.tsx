@@ -45,7 +45,9 @@ const CardActive = (props: Props) => {
   } else {
     return (
       <View style={styles.container}>
-        <Text style={styles.textSemi}>There is no active interface.</Text>
+        <Text style={styles.textSemi}>
+          There is no active interface. {props.ssid}
+        </Text>
       </View>
     );
   }

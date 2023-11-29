@@ -31,10 +31,17 @@
       "favicon": "./assets/images/icons.png"
     },
     "plugins": [
-      "expo-router", [   
+      "expo-router", 
+      [   
         "react-native-wifi-reborn",
       {
-        "fineLocationPermission": false
+        "fineLocationPermission": true
+      }
+      ],
+      ["expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
       }]
     ],
     "experiments": {

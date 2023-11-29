@@ -5,7 +5,6 @@ import * as SQLite from "expo-sqlite";
 import { TextInput } from "react-native-gesture-handler";
 import { Link, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import SelectIcons from "../../components/common/SelectIcons";
 
 type TData = {
   id: number;
