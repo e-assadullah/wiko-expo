@@ -20,7 +20,7 @@ const WifiHeader = (props: Props) => {
           </Pressable>
         </Link>
         <Text style={styles.textHead}>{props.name}</Text>
-        <Link replace href="/" asChild>
+        <Link replace href={`/wifi-setting/${props.id}`} asChild>
           <Pressable>
             <Ionicons name="ios-settings-outline" size={24} color="black" />
           </Pressable>

@@ -71,6 +71,10 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="wifi/[id]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="wifi-setting/[id]"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="platform/[id]" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>

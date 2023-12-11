@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "wiko-expo",
-    "slug": "wiko-expo",
+    "name": "Wiko",
+    "slug": "Wiko",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icons.png",
-    "scheme": "wiko-expo",
+    "scheme": "Wiko",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -16,14 +16,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.assadullahz.wikoexpo"
+      "package": "com.assadullahz.wiko"
     },
     "web": {
       "bundler": "metro",
