@@ -76,6 +76,10 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="platform/[id]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="platform-setting/[id]"
+            options={{ headerShown: false }}
+          />
         </Stack>
       </ThemeProvider>
     </RootSiblingParent>

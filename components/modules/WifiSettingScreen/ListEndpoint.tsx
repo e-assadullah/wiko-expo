@@ -1,25 +1,24 @@
 import { Alert, FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import * as SQLite from "expo-sqlite";
 import { View, Text } from "../../Themed";
+import * as SQLite from "expo-sqlite";
 import ButtonsIcons from "../../common/ButtonsIcons";
-import { router } from "expo-router";
 import Toast from "react-native-root-toast";
 import { TSeverity, getSeverity } from "../../../utils";
+import { router } from "expo-router";
 
 type TProps = {
   id: string | string[];
 };
 
-const ListDevice = (props: TProps) => {
+const ListEndpoint = (props: TProps) => {
   const db = SQLite.openDatabase("database3.db");
-  const [device, setDevice] = useState<any[]>([]);
-  const [wifi, setWifi] = useState<any[]>([]);
+  const [endpoint, setEndpoint] = useState<any[]>([]);
 
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        `SELECT * FROM device WHERE wifi_id = ${props.id}`,
+        `SELECT * FROM endpoint WHERE wifi_id = ${props.id}`,
         undefined,
         (txObj, resultSet) => {
           if (resultSet.rows.length) {
@@ -27,26 +26,7 @@ const ListDevice = (props: TProps) => {
             for (let i = 0; i < resultSet.rows.length; ++i) {
               temp.push(resultSet.rows.item(i));
             }
-            return setDevice(temp);
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-          return false;
-        }
-      );
-    });
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM wifi WHERE id = ${props.id as string}`,
-        undefined,
-        (txObj, resultSet) => {
-          if (resultSet.rows.length) {
-            let temp = [];
-            for (let i = 0; i < resultSet.rows.length; ++i) {
-              temp.push(resultSet.rows.item(i));
-            }
-            return setWifi(temp);
+            return setEndpoint(temp);
           }
         },
         (txObj, error) => {
@@ -57,40 +37,20 @@ const ListDevice = (props: TProps) => {
     });
   }, []);
 
-  const deleteDevice = (id: string | number) => {
+  const deleteEndpoint = (id: string | number) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `DELETE FROM device WHERE id = ${id}`,
+        `DELETE FROM endpoint WHERE id = ${id}`,
         undefined,
-        (txObj, resultSet) => {},
-        (txObj, error) => {
-          console.log(error);
-          showToast("error: " + error.message, "error");
-          return false;
-        }
-      );
-    });
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM endpoint WHERE device_id = ${id} AND wifi_id = ${props.id}`,
-        undefined,
-        (txObj, resultSet) => {},
-        (txObj, error) => {
-          console.log(error);
-          showToast("error: " + error.message, "error");
-          return false;
-        }
-      );
-    });
-    db.transaction((tx) => {
-      tx.executeSql(
-        `UPDATE wifi SET devices_count = ? WHERE id = ${props.id}`,
-        [wifi[0].devices_count - 1],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
+        (txObj, resultSet) => {
           if (resultSet.rowsAffected) {
-            showToast("success", "success");
             router.replace(`/wifi/${props.id}`);
           }
+        },
+        (txObj, error) => {
+          console.log(error);
+          showToast("error: " + error.message, "error");
+          return false;
         }
       );
     });
@@ -108,15 +68,15 @@ const ListDevice = (props: TProps) => {
     });
   };
 
-  const showDialogDeleteDevice = (id: string | number) => {
+  const showDialogDeleteEndpoint = (id: string | number) => {
     return Alert.alert(
-      "Delete Device",
-      "Are you sure you want to delete this device and all endpoint with this device?",
+      "Delete Endpoint",
+      "Are you sure you want to delete this endpoint ?",
       [
         {
           text: "Yes",
           onPress: () => {
-            deleteDevice(id);
+            deleteEndpoint(id);
           },
         },
         {
@@ -128,26 +88,27 @@ const ListDevice = (props: TProps) => {
 
   return (
     <View style={styles.wrap}>
-      <Text style={{ fontWeight: "500", fontSize: 20 }}>List Device</Text>
+      <Text style={{ fontWeight: "500", fontSize: 20 }}>List Endpoint</Text>
       <FlatList
-        data={device}
+        data={endpoint}
         keyExtractor={(d) => d.id}
         renderItem={(d) => (
           <View style={styles.container}>
             <Text>
-              {d.item.name} ({d.item.base_ip})
+              {d.item.name} ({"http://" + d.item.base_ip + d.item.value_primary}
+              )
             </Text>
             <ButtonsIcons
               icon="ios-trash"
               size={15}
               color="red"
-              onAction={() => showDialogDeleteDevice(d.item.id)}
+              onAction={() => showDialogDeleteEndpoint(d.item.id)}
             />
           </View>
         )}
         ListEmptyComponent={() => (
           <View style={styles.container}>
-            <Text style={styles.textCenter}>There is no device</Text>
+            <Text style={styles.textCenter}>There is no endpoint</Text>
           </View>
         )}
       />
@@ -155,7 +116,7 @@ const ListDevice = (props: TProps) => {
   );
 };
 
-export default ListDevice;
+export default ListEndpoint;
 
 const styles = StyleSheet.create({
   container: {
@@ -173,7 +134,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 10,
-    marginVertical: 10,
   },
   textCenter: {
     textAlign: "center",

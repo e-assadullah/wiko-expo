@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import WifiInformation from "../../components/modules/WifiSettingScreen/WifiInformation";
 import * as SQLite from "expo-sqlite";
 import ListDevice from "../../components/modules/WifiSettingScreen/ListDevice";
+import ListEndpoint from "../../components/modules/WifiSettingScreen/ListEndpoint";
 
 type TProps = {
   id: string | string[];
@@ -41,6 +42,7 @@ const WifiSettingScreen = (props: TProps) => {
       <WifiSettingHeader id={props.id} />
       <WifiInformation wifi={wifi} />
       <ListDevice id={props.id} />
+      <ListEndpoint id={props.id} />
     </View>
   );
 };
