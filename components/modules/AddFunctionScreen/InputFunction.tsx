@@ -7,6 +7,7 @@ import Toast from "react-native-root-toast";
 import { TSeverity, getSeverity } from "../../../utils";
 import * as SQLite from "expo-sqlite";
 import { router } from "expo-router";
+import { IPlatform } from "../AddPlatformScreen/InputPlatform";
 
 type TProps = {
   id: string | string[];
@@ -26,6 +27,15 @@ export interface IFunction {
 
 const InputFunction = (props: TProps) => {
   const db = SQLite.openDatabase("database3.db");
+
+  const [platform, setPlatform] = useState<IPlatform>({
+    id: "",
+    name: "",
+    platform: "",
+    icons: "",
+    token: "",
+    function_count: 0,
+  });
 
   const emptyData: IFunction = {
     id: 0,
@@ -81,6 +91,7 @@ const InputFunction = (props: TProps) => {
     if (!validate()) {
       return showToast("Error: Input field must be not empty", "error");
     }
+
     db.transaction((tx) => {
       tx.executeSql(
         `INSERT INTO function (id, name, platform_id, mode, link_primary, value_primary, link_secondary, value_secondary, is_header) VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -94,15 +105,43 @@ const InputFunction = (props: TProps) => {
           data.value_secondary.length ? data.value_secondary : null,
           data.is_header ? 1 : 0,
         ],
-        (txObj, resultSet: SQLite.SQLResultSet) => {
-          if (resultSet.rowsAffected) {
-            setData(emptyData);
-            router.replace(`/platform/${props.id}`);
+        (txObj, resultSet: SQLite.SQLResultSet) => {},
+        (txObj, error) => {
+          console.log(error);
+          return false;
+        }
+      );
+    });
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM platform WHERE id = ${props.id}`,
+        undefined,
+        (txObj, resultSet) => {
+          if (resultSet.rows.length) {
+            let temp: any[] = [];
+            for (let i = 0; i < resultSet.rows.length; ++i) {
+              temp.push(resultSet.rows.item(i));
+            }
+            return setPlatform(temp[0]);
           }
         },
         (txObj, error) => {
           console.log(error);
           return false;
+        }
+      );
+    });
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE platform SET function_count = ? WHERE id = ${props.id}`,
+        [platform.function_count + 1],
+        (txObj, resultSet: SQLite.SQLResultSet) => {
+          if (resultSet.rowsAffected) {
+            setData(emptyData);
+            router.replace(`/platform/${props.id}`);
+          }
         }
       );
     });
