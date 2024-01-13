@@ -19,7 +19,7 @@
       "supportsTablet": false
     },
     "android": {
-      "permission": ["android.permission.ACCESS_COURSE_LOCATION"],
+      "permission": ["android.permission.ACCESS_COURSE_LOCATION","android.permission.ACCESS_FINE_LOCATION"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
