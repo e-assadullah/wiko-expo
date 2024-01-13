@@ -45,13 +45,25 @@ const Action = (props: Props) => {
               setTimeout(() => {
                 controller.abort();
               }, 2000);
+              console.log("Fetch: " + link1);
+              const start = new Date();
               const response = await fetch(link1, { signal: controller.signal })
-                .then((res) => res)
+                .then((res) => {
+                  const timetaken = new Date() - start;
+                  console.log("Response Time: " + timetaken + "ms");
+                  return res.text();
+                })
+                .then((text) => {
+                  console.log("Message: " + text);
+                  return text;
+                })
                 .catch((err) => {
+                  const timetaken = new Date() - start;
+                  console.log("Error Response Time: " + timetaken + "ms");
                   throw err;
                 });
-              if (response.statusText) {
-                showToast(response.statusText, "success");
+              if (response) {
+                showToast(response, "success");
               } else {
                 showToast("Success", "success");
               }
@@ -179,15 +191,27 @@ const Action = (props: Props) => {
                 setTimeout(() => {
                   controller.abort();
                 }, 2000);
+                console.log("Fetch: " + link1 + "?value=" + inputState);
+                const start = new Date();
                 const response = await fetch(link1 + "?value=" + inputState, {
                   signal: controller.signal,
                 })
-                  .then((res) => res)
+                  .then((res) => {
+                    const timetaken = new Date() - start;
+                    console.log("Response Time: " + timetaken + "ms");
+                    return res.text();
+                  })
+                  .then((text) => {
+                    console.log("Message: " + text);
+                    return text;
+                  })
                   .catch((err) => {
+                    const timetaken = new Date() - start;
+                    console.log("Error Response Time: " + timetaken + "ms");
                     throw err;
                   });
-                if (response.statusText) {
-                  showToast(response.statusText, "success");
+                if (response) {
+                  showToast(response, "success");
                 } else {
                   showToast("Success", "success");
                 }

@@ -43,9 +43,9 @@ const EndpointContainer = (props: Props) => {
 
   const seLoading = (value: boolean) => {
     if (value) {
-      console.log("lagi loading");
+      // console.log("lagi loading");
     } else {
-      console.log("matikan loading");
+      // console.log("matikan loading");
     }
   };
 

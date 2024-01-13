@@ -27,18 +27,27 @@ const Monitoring = (props: TProps) => {
   };
 
   useEffect(() => {
-    if (onGoing) {
-      const interval = setInterval(async () => {
+    const interval = setInterval(async () => {
+      if (onGoing) {
         const controller = new AbortController();
         try {
           setTimeout(() => {
             controller.abort();
           }, 200);
+          console.log("Fetch: " + props.link);
+          const start = new Date();
           await fetch(props.link, {
             signal: controller.signal,
           })
-            .then((res) => res.text())
-            .then((text) => setRes(text))
+            .then((res) => {
+              const timetaken = new Date() - start;
+              console.log("Response Time: " + timetaken + "ms");
+              return res.text();
+            })
+            .then((text) => {
+              console.log("Message: " + text);
+              setRes(text);
+            })
             .catch((err) => {
               throw err;
             });
@@ -52,8 +61,10 @@ const Monitoring = (props: TProps) => {
           setOnGoing(false);
           clearInterval(interval);
         }
-      }, 500);
-    }
+      } else {
+        clearInterval(interval);
+      }
+    }, 3000);
   }, [onGoing, setOnGoing]);
 
   return (
@@ -68,7 +79,7 @@ const Monitoring = (props: TProps) => {
         }
       ></View>
       <Pressable
-        onPress={() => setOnGoing(true)}
+        onPress={() => setOnGoing((prev) => !prev)}
         onPressIn={() => setPress(true)}
         onPressOut={() => setPress(false)}
       >

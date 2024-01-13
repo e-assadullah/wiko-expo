@@ -25,6 +25,7 @@ const HomeScreen = () => {
     WifiManager?.getCurrentWifiSSID().then(
       (ssid) => {
         setSsid(ssid);
+        console.log("SSID: ", ssid);
       },
       () => {
         console.log("Cannot get current SSID!");

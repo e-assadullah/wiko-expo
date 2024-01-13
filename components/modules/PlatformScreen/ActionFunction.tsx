@@ -55,14 +55,22 @@ const ActionFunction = (props: Props) => {
               setTimeout(() => {
                 controller.abort();
               }, 2000);
+              console.log("Fetch: " + link1);
+              const start = new Date();
               const request = new Request(link1, {
                 method: "POST",
                 body: `{"value": ${value_primary}}`,
                 signal: controller.signal,
               });
               const response = await fetch(request)
-                .then((res) => res)
+                .then((res) => {
+                  const timetaken = new Date() - start;
+                  console.log("Response Time: " + timetaken + "ms");
+                  return res;
+                })
                 .catch((err) => {
+                  const timetaken = new Date() - start;
+                  console.log("Response Time: " + timetaken + "ms");
                   throw err;
                 });
               if (response.statusText) {
@@ -105,6 +113,8 @@ const ActionFunction = (props: Props) => {
               setTimeout(() => {
                 controller.abort();
               }, 2000);
+              console.log("Fetch: " + link1);
+              const start = new Date();
               const request = new Request(switchState ? link2 : link1, {
                 method: "POST",
                 body: `{"value": ${
@@ -113,8 +123,14 @@ const ActionFunction = (props: Props) => {
                 signal: controller.signal,
               });
               const response = await fetch(request)
-                .then((res) => res)
+                .then((res) => {
+                  const timetaken = new Date() - start;
+                  console.log("Response Time: " + timetaken + "ms");
+                  return res;
+                })
                 .catch((err) => {
+                  const timetaken = new Date() - start;
+                  console.log("Response Time: " + timetaken + "ms");
                   throw err;
                 });
               if (response.statusText) {
@@ -151,6 +167,8 @@ const ActionFunction = (props: Props) => {
                   setTimeout(() => {
                     controller.abort();
                   }, 2000);
+                  console.log("Fetch: " + link1);
+                  const start = new Date();
                   const request = new Request(switchState ? link2 : link1, {
                     method: "POST",
                     body: `{"value": ${
@@ -159,8 +177,14 @@ const ActionFunction = (props: Props) => {
                     signal: controller.signal,
                   });
                   const response = await fetch(request)
-                    .then((res) => res)
+                    .then((res) => {
+                      const timetaken = new Date() - start;
+                      console.log("Response Time: " + timetaken + "ms");
+                      return res;
+                    })
                     .catch((err) => {
+                      const timetaken = new Date() - start;
+                      console.log("Response Time: " + timetaken + "ms");
                       throw err;
                     });
                   if (response.statusText) {
@@ -204,14 +228,22 @@ const ActionFunction = (props: Props) => {
                 setTimeout(() => {
                   controller.abort();
                 }, 2000);
+                console.log("Fetch: " + link1);
+                const start = new Date();
                 const request = new Request(link1, {
                   method: "POST",
                   body: `{"value": ${inputState}}`,
                   signal: controller.signal,
                 });
                 const response = await fetch(request)
-                  .then((res) => res)
+                  .then((res) => {
+                    const timetaken = new Date() - start;
+                    console.log("Response Time: " + timetaken + "ms");
+                    return res;
+                  })
                   .catch((err) => {
+                    const timetaken = new Date() - start;
+                    console.log("Response Time: " + timetaken + "ms");
                     throw err;
                   });
                 if (response.statusText) {

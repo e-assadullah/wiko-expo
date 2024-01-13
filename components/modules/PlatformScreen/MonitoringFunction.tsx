@@ -34,12 +34,20 @@ const MonitoringFunction = (props: TProps) => {
           setTimeout(() => {
             controller.abort();
           }, 5000);
+          console.log("Fetch: " + props.link);
+          const start = new Date();
           await fetch(props.link, {
             signal: controller.signal,
           })
             .then((res) => res.json())
-            .then((json) => setRes(json))
+            .then((json) => {
+              const timetaken = new Date() - start;
+              console.log("Response Time: " + timetaken + "ms");
+              setRes(json);
+            })
             .catch((err) => {
+              const timetaken = new Date() - start;
+              console.log("Response Time: " + timetaken + "ms");
               throw err;
             });
         } catch (error: any) {
